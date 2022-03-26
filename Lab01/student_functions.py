@@ -132,12 +132,9 @@ def BFS(matrix, start, end):
                             isEnd = true
                             break
                         queue.append(node)
-        
-            #break if meet the end node
-            if isEnd:
-                queue.clear()
-                break
-
+    #clear the queue after using
+    queue.clear()
+                
     #Only trace the path, if there is any path from start -> end
     if end in visited.keys():
         path = tracePathFromVisited(start, end, visited)
