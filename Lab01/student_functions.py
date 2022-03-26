@@ -115,25 +115,29 @@ def BFS(matrix, start, end):
     queue.append(start)
 
     #flag to check, if the end node is popped from the queue
-    isEndPopped = False
+    isEnd = False
 
-    while not isEndPopped:
+    if start != end:
+        while not isEnd:
 
-        #the iterator for scanning each matrix
-        currentNode = queue.pop(0)
+            #the iterator for scanning each matrix
+            currentNode = queue.pop(0)
 
-        #break if meet the end node
-        if end == currentNode:
-            isEndPopped = True
-            break
-
-        #Start to iterate
-        for node, weight in enumerate(matrix[currentNode]):
-            if weight > 0:
-                if node not in visited.keys():
-                    visited[node] = currentNode
-                    queue.append(node)
+            #Start to iterate
+            for node, weight in enumerate(matrix[currentNode]):
+                if weight > 0:
+                    if node not in visited.keys():
+                        visited[node] = currentNode
+                        if node == end:
+                            isEnd = true
+                            break
+                        queue.append(node)
         
+            #break if meet the end node
+            if isEnd:
+                queue.clear()
+                break
+
     #Only trace the path, if there is any path from start -> end
     if end in visited.keys():
         path = tracePathFromVisited(start, end, visited)
