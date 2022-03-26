@@ -1,4 +1,6 @@
 from Animations import run
+from student_functions import DFS
+import numpy as np
 import sys
 
 if __name__ == '__main__':
@@ -14,4 +16,6 @@ if __name__ == '__main__':
         time_delay = int(sys.argv[4])
     else: time_delay=500
     run(input, al, time_delay)
+
+    
     

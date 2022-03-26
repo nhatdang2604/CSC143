@@ -7,10 +7,12 @@ def DFS_getVisited(matrix, currentNode, end, visited):
         return visited
     
     #recursive part
-    for node in matrix[currentNode]:
-        if node not in visited.keys():
-            visited[node] = currentNode
-            return DFS_getVisited(matrix, node, end, visited)
+    for node, weight in enumerate(matrix[currentNode]):
+
+        if 0 < weight:                                                  #if there is any path from currentNode -> node
+            if node not in visited.keys():                              #if the node has not been visited yet
+                visited[node] = currentNode                             #mark that the node is visited
+                visited = DFS_getVisited(matrix, node, end, visited)    #the current node now is the node
 
     #return the current visisted, if there are:
     #   0) The current node has no adjacency node
@@ -22,7 +24,7 @@ def DFS_getVisited(matrix, currentNode, end, visited):
 def DFS_getPath(start, end, visited):
 
     #the answer path
-    path: list
+    path = []
 
     #Iterate from end -> start
     nodeIterator = end
