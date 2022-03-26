@@ -21,7 +21,7 @@ def DFS_getVisited(matrix, currentNode, end, visited):
 
 #Trace the path from start to end, 
 # by using the builded visited
-def DFS_getPath(start, end, visited):
+def tracePathFromVisited(start, end, visited):
 
     #the answer path
     path = []
@@ -73,7 +73,7 @@ def DFS(matrix, start, end):
     
     #Only trace the path, if there is any path from start -> end
     if end in visited.keys():
-        path = DFS_getPath(start, end, visited)
+        path = tracePathFromVisited(start, end, visited)
 
     return visited, path
 
@@ -100,9 +100,44 @@ def BFS(matrix, start, end):
 
     # TODO: 
     
+    #Given variable
     path=[]
     visited={}
    
+    #the queue for storing the node's adjacency
+    #   for iterating
+    queue = []
+
+    #initialize the pre-node to reach to start node
+    visited[start] = None
+
+    #store the start node into the queue
+    queue.append(start)
+
+    #flag to check, if the end node is popped from the queue
+    isEndPopped = False
+
+    while not isEndPopped:
+
+        #the iterator for scanning each matrix
+        currentNode = queue.pop(0)
+
+        #break if meet the end node
+        if end == currentNode:
+            isEndPopped = True
+            break
+
+        #Start to iterate
+        for node, weight in enumerate(matrix[currentNode]):
+            if weight > 0:
+                if node not in visited.keys():
+                    visited[node] = currentNode
+                    queue.append(node)
+        
+    #Only trace the path, if there is any path from start -> end
+    if end in visited.keys():
+        path = tracePathFromVisited(start, end, visited)
+
     return visited, path
 
 
