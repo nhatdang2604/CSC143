@@ -1,4 +1,5 @@
 import numpy as np
+from queue import PriorityQueue
 
 def DFS_getVisited(matrix, currentNode, end, visited):
     
@@ -191,6 +192,54 @@ def GBFS(matrix, start, end):
     # TODO: 
     path=[]
     visited={}
+
+    #The priority queue to get the minimum distance node 
+    #  which is adjancency to the current node
+    priorityQueue = PriorityQueue()
+
+    #mark the start node is visited
+    visited[start] = None
+
+    #put the start node into priority queue
+    priorityQueue.put((0, start))   #0 is the init distance
+
+    #flag to check if the end path is found
+    isEndFound = False
+
+    #loop until found the end node
+    while not isEndFound:
+
+        #get the minimum node which in the pqueue
+        currentNode = priorityQueue.get()
+        
+        #get the variable for code readability
+        minWeight = currentNode[0]
+        minNode = currentNode[1]
+
+        #iterate over all the adjancency node of the minNode
+        for node, weight in enumerate(matrix[minNode]):
+
+            #if there is a path from minNode -> node
+            if weight>0:
+
+                #if the node has not been visited yet
+                if node not in visited.keys():
+
+                    #mark as the node was visited
+                    visited[node] = minNode
+
+                    #check if the node is the end node => finish the loop
+                    if end == node:
+                        isEndFound = True
+                        break
+                    
+                    #put the node into priority queue, with weight = sum weight
+                    priorityQueue.put((minWeight + weight, node))
+
+    #find the path base on the visited
+    if end in visited.keys():
+        path = tracePathFromVisited(start, end, visited)
+
     return visited, path
 
 def Astar(matrix, start, end, pos):
