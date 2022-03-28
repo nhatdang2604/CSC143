@@ -166,6 +166,69 @@ def UCS(matrix, start, end):
     # TODO:  
     path=[]
     visited={}
+
+    #visisted, but with cost
+    visitedAndCost = {}
+
+    #The priority queue to get the minimum distance node 
+    #  which is adjancency to the current node
+    priorityQueue = PriorityQueue()
+
+    #mark the start node is visited
+    visitedAndCost[start] = (0, None)
+
+    #put the start node into priority queue
+    priorityQueue.put((0, start))   #0 is the init distance
+
+    while not priorityQueue.empty():
+
+        #get the minimum node which in the pqueue
+        currentNode = priorityQueue.get()
+        
+        #get the variable for code readability
+        minWeight = currentNode[0]
+        minNode = currentNode[1]
+
+        #terminate condition
+        if minNode == end:
+            break
+
+        #iterate over all the adjancency node of the minNode
+        for node, weight in enumerate(matrix[minNode]):
+
+            #if there is a path from minNode -> node
+            if weight>0:
+
+                #calculate the total cost
+                totalCost = minWeight + weight
+
+                #if the node has not been visited yet
+                if node not in visitedAndCost.keys():
+
+                    #mark as the node was visited
+                    visitedAndCost[node] = (totalCost, minNode)
+
+                    #put the node into priority queue, with weight = sum weight
+                    priorityQueue.put((totalCost, node))
+
+                else:
+                    
+                    #check if the current path from somewhere -> node is longer than
+                    #   from minNode -> node:
+                    #       If yes: update the new path to minNode -> node
+                    #       else, do nothing
+                    if visitedAndCost[node][0] > totalCost:
+                        visitedAndCost[node] = (totalCost, minNode)
+                        priorityQueue.put((totalCost, node))
+
+    #update the visited from visitedAndCost
+    for key in visitedAndCost.keys():
+        visited[key] = visitedAndCost[key][1]
+
+    #find the path base on the visited
+    if end in visited.keys():
+        path = tracePathFromVisited(start, end, visited)
+        
     return visited, path
 
 
