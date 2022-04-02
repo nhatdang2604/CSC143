@@ -131,7 +131,7 @@ def BFS(matrix, start, end):
                     if node not in visited.keys():
                         visited[node] = currentNode
                         if node == end:
-                            isEnd = true
+                            isEnd = True
                             break
                         queue.append(node)
     #clear the queue after using
