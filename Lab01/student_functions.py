@@ -277,7 +277,6 @@ def GBFS(matrix, start, end):
         currentNode = priorityQueue.get()
         
         #get the variable for code readability
-        minWeight = currentNode[0]
         minNode = currentNode[1]
 
         #iterate over all the adjancency node of the minNode
@@ -297,8 +296,8 @@ def GBFS(matrix, start, end):
                         isEndFound = True
                         break
                     
-                    #put the node into priority queue, with weight = sum weight
-                    priorityQueue.put((minWeight + weight, node))
+                    #put the node into priority queue, with weight = edge weight
+                    priorityQueue.put((weight, node))
 
     #find the path base on the visited
     if end in visited.keys():
