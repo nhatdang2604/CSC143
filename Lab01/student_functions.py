@@ -1,4 +1,5 @@
 import numpy as np
+import math
 from queue import PriorityQueue
 
 def DFS_getVisited(matrix, currentNode, end, visited):
@@ -329,5 +330,82 @@ def Astar(matrix, start, end, pos):
     # TODO: 
     path=[]
     visited={}
+
+    #visisted, but with cost
+    #cost = f(x) = g(x) + h(x)
+    visitedAndCost = {}
+
+    #The priority queue to get the minimum cost node
+    #  which is adjancency to the current node
+    priorityQueue = PriorityQueue()
+
+    #mark the start node is visited
+    visitedAndCost[start] = (0, None)
+
+    #put the start node into priority queue
+    priorityQueue.put((0, start))   #0 is the init distance
+
+    #get the end node'coordinate
+    endCoordinate = pos[end]
+
+    while not priorityQueue.empty():
+
+        #get the minimum node which in the pqueue
+        currentNode = priorityQueue.get()
+        
+        #get the variable for code readability
+        minWeight = currentNode[0]
+        minNode = currentNode[1]
+
+        #terminate condition
+        if minNode == end:
+            break
+
+        #iterate over all the adjancency node of the minNode
+        for node, weight in enumerate(matrix[minNode]):
+
+            #if there is a path from minNode -> node
+            if weight>0:
+
+                #get the cooridnate of the adjancency node
+                nodeCoordinate = pos[node]
+
+                #calculate the value f(x) base on total weigth + heuristic
+                dx = (endCoordinate[0] - nodeCoordinate[0])
+                dy = (endCoordinate[1] - nodeCoordinate[1])
+                h_x = math.sqrt(dx * dx + dy * dy)  #heuristic base on the euclidean distance
+                g_x = minWeight + weight            #total weight  
+                
+                #calculate the total cost (the f(x))
+                totalCost = h_x + g_x
+
+                #if the node has not been visited yet
+                if node not in visitedAndCost.keys():
+
+                    #mark as the node was visited
+                    visitedAndCost[node] = (totalCost, minNode)
+
+                    #put the node into priority queue, with weight = sum weight
+                    priorityQueue.put((totalCost, node))
+
+                else:
+                    
+                    #check if the current path from somewhere -> node is longer than
+                    #   from minNode -> node:
+                    #       If yes: update the new path to minNode -> node
+                    #       else, do nothing
+                    if totalCost < visitedAndCost[node][0]:
+                        visitedAndCost[node] = (totalCost, minNode)
+                        priorityQueue.put((totalCost, node))
+
+    #update the visited from visitedAndCost
+    for key in visitedAndCost.keys():
+        visited[key] = visitedAndCost[key][1]
+
+    #find the path base on the visited
+    if end in visited.keys():
+        path = tracePathFromVisited(start, end, visited)
+
+
     return visited, path
 
