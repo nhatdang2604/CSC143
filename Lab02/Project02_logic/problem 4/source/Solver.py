@@ -17,7 +17,11 @@ class Literal:
         return self.__value == other.value()
 
     def __lt__(self, other: 'Literal'):
-        return self.value() < other.value()
+
+        thisValue = self.value().replace('-', '')
+        thatValue = self.value().replace('-', '')
+
+        return thisValue() < thatValue()
 
     def value(self) -> str:
         return self.__value
@@ -114,50 +118,58 @@ class Clause:
 
 class Solver:
     __alpha: Clause
-    __kb: list
+    __kb: set
     __stepResult: list
 
-    def __init__(self, alpha: Clause, kb: list) -> None:
+    def __init__(self, alpha: Clause, kb: set) -> None:
         self.__alpha = alpha
         self.__kb = kb
 
     def setAlpha(self, alpha: Clause) -> None:
         self.__alpha = alpha
     
-    def setKB(self, kb: list) -> None:
+    def setKB(self, kb: set) -> None:
         self.__kb = kb
 
     def addNotAlphaIntoKB(self) -> None:
 
-        #split literal from literals,add to list, then sort it (because set is not ordered)
-        literals = [literal.inverse() for literal in self.__alpha.literals()]
-        literals.sort()
+        # #split literal from literals,add to list, then sort it (because set is not ordered)
+        # literals = [literal.inverse() for literal in self.__alpha.literals()]
+        # literals.sort()
         
         #Add the literal from alpha to kb
-        for literal in literals:
+        for literal in self.__alpha.literals():
             self.__kb.append(literal)
     
     def pl_resolution(self) -> str:
         self.addNotAlphaIntoKB()
 
         resolvent: Clause
-        
+        new = set()
 
         while True:
-            resolvents = []
-            for i in range(0, len(kb) - 1):
-                for j in range(i + 1, len(kb)):
-                    if kb[i].isAbleToResolve(kb[j]):
+            resolvents = set()
+            for clauseA in self.__kb:
+                for clauseB in self.__kb:
+                    if clauseA.isAbleToResolve(clauseB):
                         
-                        resolvent = kb[i].resolve(kb[j])
+                        resolvent = clauseA.resolve(clauseB)
 
                         #Check if the resolvent is not the True clause
                         #   => add to KB
                         if resolvent.isAppliable():
-                            resolvents.append(resolvent)
+                            if resolvent not in self.__kb:
+                                resolvents.add(resolvent)
+                                new.add(resolvent)
 
-            
             self.__stepResult.append(resolvents)
+
+            if new.issubset(self.__kb):
+                return "NO"
+
+            for resolv in resolvents:
+                self.__kb.add(resolv)
+
             for resolv in resolvents:
                 if resolv.isEmpty():
                     return "YES"
