@@ -1,35 +1,35 @@
 8
-B OR C
 -B OR D
--A OR -D
--A OR -B OR F
--A OR C OR D OR F
 -C
--A OR B OR F
 -D OR F
+-A OR -D
+B OR C
+-A OR B OR F
+-A OR C OR D OR F
+-A OR -B OR F
 12
-B OR F
-B
--A OR C OR D
--A OR -B
-C OR D OR F
--D
--B OR F
--A OR B
 C OR D
+C OR D OR F
+B
 -A OR D OR F
--A OR F
 -A OR C OR F
+B OR F
+-A OR C OR D
+-B OR F
+-A OR -B
+-A OR B
+-A OR F
+-D
 9
--B
-D OR F
--A OR D
-C OR F
--A
--A OR C
 F
+-A
+D OR F
 C
 D
+-A OR C
+C OR F
+-B
+-A OR D
 1
 {}
 YES
