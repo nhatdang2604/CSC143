@@ -133,11 +133,6 @@ class Solver:
     def __init__(self) -> None:
         self.__stepResult = []
 
-    # def __init__(self, alpha: Clause, kb: set) -> None:
-    #     self.__alpha = alpha
-    #     self.__kb = kb
-    #     self.__stepResult = []
-
     def setAlpha(self, alpha: Clause) -> None:
         self.__alpha = alpha
     
@@ -152,10 +147,6 @@ class Solver:
 
     def addNotAlphaIntoKB(self) -> None:
 
-        # #split literal from literals,add to list, then sort it (because set is not ordered)
-        # literals = [literal.inverse() for literal in self.__alpha.literals()]
-        # literals.sort()
-        
         #Add the literal from alpha to kb
         for literal in self.__alpha.literals():
             self.__kb.add(Clause({literal.inverse()}, True))
