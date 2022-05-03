@@ -19,9 +19,9 @@ class Literal:
     def __lt__(self, other: 'Literal'):
 
         thisValue = self.value().replace('-', '')
-        thatValue = self.value().replace('-', '')
+        thatValue = other.value().replace('-', '')
 
-        return thisValue() < thatValue()
+        return thisValue < thatValue
 
     def value(self) -> str:
         return self.__value
@@ -81,7 +81,10 @@ class Clause:
             return "{}"
 
         needle = ' OR '
-        return needle.join(literal.value() for literal in self.__literals)
+        orderedSet = sorted(self.__literals)
+        buffer = needle.join(literal.value() for literal in orderedSet)
+        
+        return buffer
 
 
     def literals(self) -> set:
@@ -127,10 +130,13 @@ class Solver:
     __kb: set
     __stepResult: list
 
-    def __init__(self, alpha: Clause, kb: set) -> None:
-        self.__alpha = alpha
-        self.__kb = kb
+    def __init__(self) -> None:
         self.__stepResult = []
+
+    # def __init__(self, alpha: Clause, kb: set) -> None:
+    #     self.__alpha = alpha
+    #     self.__kb = kb
+    #     self.__stepResult = []
 
     def setAlpha(self, alpha: Clause) -> None:
         self.__alpha = alpha
@@ -155,6 +161,8 @@ class Solver:
             self.__kb.add(Clause({literal.inverse()}, True))
     
     def pl_resolution(self) -> str:
+        self.__stepResult = []
+
         self.addNotAlphaIntoKB()
 
         resolvent: Clause
