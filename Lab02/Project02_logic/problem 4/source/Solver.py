@@ -72,9 +72,15 @@ class Clause:
         hashableSet = frozenset(self.__literals)
         return hash(hashableSet)
 
-    def __str__(self) -> str:
-        needle = ' OR '
+    def __eq__(self, other: 'Clause'):
+        return self.__literals == other.literals()
 
+    def __str__(self) -> str:
+        
+        if (self.isEmpty()):
+            return "{}"
+
+        needle = ' OR '
         return needle.join(literal.value() for literal in self.__literals)
 
 
@@ -124,12 +130,19 @@ class Solver:
     def __init__(self, alpha: Clause, kb: set) -> None:
         self.__alpha = alpha
         self.__kb = kb
+        self.__stepResult = []
 
     def setAlpha(self, alpha: Clause) -> None:
         self.__alpha = alpha
     
     def setKB(self, kb: set) -> None:
         self.__kb = kb
+
+    def stepResult(self) -> list:
+        return self.__stepResult
+
+    def kb(self) -> set:
+        return self.__kb
 
     def addNotAlphaIntoKB(self) -> None:
 
@@ -139,7 +152,7 @@ class Solver:
         
         #Add the literal from alpha to kb
         for literal in self.__alpha.literals():
-            self.__kb.append(literal)
+            self.__kb.add(Clause({literal.inverse()}, True))
     
     def pl_resolution(self) -> str:
         self.addNotAlphaIntoKB()
